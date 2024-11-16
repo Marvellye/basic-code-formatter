@@ -14,16 +14,16 @@ const app = Vue.createApp({
                 return;
             }
 
-            // Simple formatting logic
+            // Format using js-beautify
             switch (this.selectedLanguage) {
                 case 'html':
-                    this.outputCode = this.beautifyHTML(this.inputCode);
+                    this.outputCode = this.formatHTML(this.inputCode);
                     break;
                 case 'css':
-                    this.outputCode = this.beautifyCSS(this.inputCode);
+                    this.outputCode = this.formatCSS(this.inputCode);
                     break;
                 case 'javascript':
-                    this.outputCode = this.beautifyJS(this.inputCode);
+                    this.outputCode = this.formatJS(this.inputCode);
                     break;
                 default:
                     this.outputCode = this.inputCode;
@@ -31,14 +31,14 @@ const app = Vue.createApp({
 
             this.highlightCode();
         },
-        beautifyHTML(code) {
-            return code.replace(/(>)(<)/g, '$1\n$2').trim();
+        formatHTML(code) {
+            return html_beautify(code, { indent_size: 2, preserve_newlines: true });
         },
-        beautifyCSS(code) {
-            return code.replace(/;(?=\S)/g, ';\n').trim();
+        formatCSS(code) {
+            return css_beautify(code, { indent_size: 2 });
         },
-        beautifyJS(code) {
-            return code.replace(/;(?!\n)/g, ';\n').trim();
+        formatJS(code) {
+            return js_beautify(code, { indent_size: 2 });
         },
         highlightCode() {
             this.highlightedCode = Prism.highlight(this.outputCode, Prism.languages[this.selectedLanguage], this.selectedLanguage);
